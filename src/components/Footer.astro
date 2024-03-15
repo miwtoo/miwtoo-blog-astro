@@ -1,7 +1,10 @@
 ---
+import GoogleAnalytics from "./GoogleAnalytics.astro";
+
 const today = new Date();
 ---
 
+<GoogleAnalytics id={import.meta.env.GANALYTICS_ID} />
 <footer>
 	&copy; {today.getFullYear()} Miwtoo. All rights reserved.
 	<div class="social-links">
