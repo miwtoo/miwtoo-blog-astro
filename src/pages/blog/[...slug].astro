@@ -1,20 +1,25 @@
 ---
-import { type CollectionEntry, getCollection } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
 
+import directus from "../../lib/directus";
+import { readItems } from "@directus/sdk";
+import md from '../../lib/markdownit';
+import { CONTENTS_BASE_URL } from '../../consts';
+
 export async function getStaticPaths() {
-	const posts = await getCollection('blog');
-	return posts.map((post) => ({
-		params: { slug: post.slug },
-		props: post,
-	}));
+  const posts = await directus.request(
+    readItems("posts", {
+      fields: ["*", { relation: ["*"] }],
+    }),
+  );
+  return posts.map((post) => ({ params: { slug: post.slug }, props: post }));
 }
-type Props = CollectionEntry<'blog'>;
 
 const post = Astro.props;
-const { Content } = await post.render();
+
+const result = md.render(post.content);
 ---
 
-<BlogPost {...post.data}>
-	<Content />
+<BlogPost title={post.title} description="test" image=`${CONTENTS_BASE_URL}/assets/${post.image}?format=auto` publishedDate={post.published_date} updatedDate={post.date_updated}>
+	<div set:html={result}></div>
 </BlogPost>

@@ -1,15 +1,19 @@
 import rss from '@astrojs/rss';
-import { getCollection } from 'astro:content';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+// import { getCollection } from 'astro:content';
+import directus from "../lib/directus";
+import { readSingleton, readItems } from "@directus/sdk";
+const global = await directus.request(readSingleton("global"));
 
 export async function GET(context) {
-	const posts = await getCollection('blog');
+	const posts = await directus.request(readItems("posts", {
+		fields: ['*', { relation: ['*'] }],
+	}));
 	return rss({
-		title: SITE_TITLE,
-		description: SITE_DESCRIPTION,
+		title: global.title,
+		description: global.description,
 		site: context.site,
 		items: posts.map((post) => ({
-			...post.data,
+			...post.content,
 			link: `/blog/${post.slug}/`,
 		})),
 	});

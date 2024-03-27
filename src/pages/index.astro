@@ -1,15 +1,19 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Blog from './blog/index.astro'
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import BaseHead from "../components/BaseHead.astro";
+import Blog from "./blog/index.astro";
+
+import directus from "../lib/directus";
+import { readSingleton } from "@directus/sdk";
+
+const global = await directus.request(readSingleton("global"));
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<BaseHead title={global.title} description={global.description} />
 	</head>
 	<body>
-		  <Blog />
+		<Blog />
 	</body>
 </html>

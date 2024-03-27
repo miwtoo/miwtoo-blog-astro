@@ -1,5 +1,1 @@
-// Place any global data in this file.
-// You can import this data from anywhere in your site by using the `import` keyword.
-
-export const SITE_TITLE = 'Miwtoo';
-export const SITE_DESCRIPTION = 'Welcome to Miwtoo website!';
+export const CONTENTS_BASE_URL = "http://contents.miwtoo.me";
